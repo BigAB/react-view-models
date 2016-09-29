@@ -11,7 +11,7 @@ export function connect( MapToProps, ComponentToConnect ) {
       this.propsCompute = compute(props);
 
       if ( MapToProps.prototype instanceof DefineMap ) {
-        this.viewModel = new MapToProps( this.propsCompute() );
+        this.viewModel = new MapToProps({ props: this.propsCompute() });
         this.mapToState = this.createMapToStateWithViewModel( this.viewModel );
       } else {
         this.mapToState = this.createMapToStateWithFunction( MapToProps );
@@ -28,7 +28,7 @@ export function connect( MapToProps, ComponentToConnect ) {
 
     createMapToStateWithViewModel( vm ) {
       return compute(() => {
-        vm.set( this.propsCompute() );
+        vm.props = this.propsCompute();
         const props = vm.serialize();
         getMethodNames( vm ).forEach( methodName => {
           props[methodName] = vm[methodName].bind(vm);
